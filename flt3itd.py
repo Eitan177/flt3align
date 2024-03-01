@@ -80,6 +80,6 @@ if submit_button:
     st.write('Alignment')
     st.bar_chart(chart_data1,y='ref',color='match',width=towrite1.shape[1])
     st.write('ITD Length')
-    st.write(itdlen+np.sum(chart_data1['insert'])
+    st.write(itdlen+np.sum(chart_data1['insert']))
     st.write(alignments[0]._get_row(0))
     st.write(alignments[0]._get_row(1))
