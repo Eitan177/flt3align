@@ -63,7 +63,7 @@ if submit_button:
     towrite1=pd.concat((pd.DataFrame(array1).T,pd.DataFrame(array2).T))
 
     st.write(towrite1)
-    chart_data1 = towrite1.apply(lambda x: (True, x.iloc[0]==x.iloc[1]))
+    chart_data1 = towrite1.apply(lambda x: (int(True), int(x.iloc[0]==x.iloc[1])))
     st.write(chart_data1,width=towrite1.shape[1])
     chart_data1=chart_data1.T
     chart_data1.columns=['ref','var']
