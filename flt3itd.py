@@ -30,7 +30,10 @@ def do_analysis(alignments, titlewords):
     chart_data1['insert']=chart_data1.apply(lambda  x: x[2]== 1 and x[3]==0 and x[1]==0,axis=1)
     chart_data1['refseq']=towrite1.apply(lambda x:x.iloc[0])
     chart_data1['varseq']=towrite1.apply(lambda x:x.iloc[1])
+    st.write('Matching bases between sequence and reference')
     st.write(np.sum(chart_data1['match']))
+    st.write('inserted base number')
+    st.write(np.sum(chart_data1['insert']))   
 
     
 
