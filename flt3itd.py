@@ -7,7 +7,7 @@ import re
 import streamlit as st 
 
 
-def do_analysis(alignments):
+def do_analysis(alignments, titlewords):
     array1=[]
     array2=[]    
     for ch2 in alignments[0]._get_row(1):
@@ -20,7 +20,7 @@ def do_analysis(alignments):
 
     st.write(towrite1)
     chart_data1 = towrite1.apply(lambda x: (True,x.iloc[0]==x.iloc[1]))
-    st.write(chart_data1,width=towrite1.shape[1])
+    #st.write(chart_data1,width=towrite1.shape[1])
     chart_data1=chart_data1.T
     chart_data1.columns=['ref','match']
     chart_data1['minmatch']=0
@@ -30,10 +30,10 @@ def do_analysis(alignments):
     chart_data1['insert']=chart_data1.apply(lambda  x: x[2]== 1 and x[3]==0 and x[1]==0,axis=1)
     chart_data1['refseq']=towrite1.apply(lambda x:x.iloc[0])
     chart_data1['varseq']=towrite1.apply(lambda x:x.iloc[1])
-    st.write(chart_data1)
+    #st.write(chart_data1)
 
     
-    st.write('Alignment')
+    st.write('Alignment '+titlewords)
     st.bar_chart(chart_data1,y='ref',color='match',width=towrite1.shape[1])
     return chart_data1
 
@@ -64,17 +64,15 @@ if submit_button:
     alignments = aligner.align(seq_ref, seq_var)
     
     st.write('pairwise alignment finished')
-    chart_data1=do_analysis(alignments)
+    chart_data1=do_analysis(alignments,'query with input sequence' )
     itdbase=len(ucsc_variant_seq)
     st.write('ITD Length')
     st.write(itdbase+np.sum(chart_data1['insert']))
     itdseq=ucsc_variant_seq+''.join(chart_data1['varseq'][chart_data1['insert']])
-    aligner.mode = 'global'
-    aligner.open_gap_score = -2
-    aligner.extend_gap_score = 0
-    aligner.match_score = 5
+
     itdseqalignments = aligner.align(seq_ref, itdseq)
-    do_analysis(itdseqalignments)
+    do_analysis(itdseqalignments,'query with ITD')
+    st.write('ITD')
     st.write(itdseq)
     #seqshow1= [a for a in str(alignments[0].sequences[0])] 
     #seqshow2= [a for a in str(alignments[0].sequences[1])]
