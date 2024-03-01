@@ -72,7 +72,7 @@ if submit_button:
     chart_data1['maxmatch']=0
     chart_data1['maxmatch'][np.max(np.where(chart_data1['match'])[0]):]=1
     st.write(chart_data1)
-    st.write(chart_data1.apply(lambda  x: x[2]== 1 and x[3]==0 and x[1]==0,axis=1))
+    st.write(np.sum(chart_data1.apply(lambda  x: x[2]== 1 and x[3]==0 and x[1]==0,axis=1)))
     st.write(chart_data1)
     itdlen=np.max(np.where(chart_data1['match'])) -np.min(np.where(chart_data1['match']))  - len(ucsc_variant_seq) 
     st.write(itdlen)
