@@ -17,7 +17,7 @@ def do_analysis(alignments, titlewords):
 
 
     towrite1=pd.concat((pd.DataFrame(array1).T,pd.DataFrame(array2).T))
-
+    st.write('Alignment '+titlewords)
     st.write(towrite1)
     chart_data1 = towrite1.apply(lambda x: (True,x.iloc[0]==x.iloc[1]))
     #st.write(chart_data1,width=towrite1.shape[1])
@@ -33,7 +33,7 @@ def do_analysis(alignments, titlewords):
     #st.write(chart_data1)
 
     
-    st.write('Alignment '+titlewords)
+
     st.bar_chart(chart_data1,y='ref',color='match',width=towrite1.shape[1])
     return chart_data1
 
@@ -56,14 +56,12 @@ if submit_button:
     left_flank = requests.get("https://api.genome.ucsc.edu/getData/sequence?genome=hg38;chrom="+chrom+";start="+str(left_flank_start)+";end="+start).json()['dna']
     right_flank = requests.get("https://api.genome.ucsc.edu/getData/sequence?genome=hg38;chrom="+chrom+";start="+end+";end="+str(right_flank_end)).json()['dna']
     seq_ref=left_flank+itd+right_flank
-    st.write('sequence retrieved')
 
     # Finding similarities
     aligner = Align.PairwiseAligner()
     aligner.open_gap_score = -2
     alignments = aligner.align(seq_ref, seq_var)
     
-    st.write('pairwise alignment finished')
     chart_data1=do_analysis(alignments,'query with input sequence' )
     itdbase=len(ucsc_variant_seq)
     st.write('ITD Length')
