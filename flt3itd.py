@@ -67,6 +67,8 @@ if submit_button:
     st.write(chart_data1,width=towrite1.shape[1])
     chart_data1=chart_data1.T
     chart_data1.columns=['ref','match']
+    chart_data1['minmatch']=0
+    chart_data1['minmatch'][np.min(np.where(chart_data1['match'])[0]):]=1
     st.write(chart_data1)
     itdlen=np.max(np.where(chart_data1['match'])) -np.min(np.where(chart_data1['match']))  - len(ucsc_variant_seq) 
     st.write(itdlen)
