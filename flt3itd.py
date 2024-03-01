@@ -67,6 +67,7 @@ if submit_button:
     st.write(chart_data1,width=towrite1.shape[1])
     chart_data1=chart_data1.T
     chart_data1.columns=['ref','var']
+    st.write(chart_data1)
     st.bar_chart(chart_data1,width=towrite1.shape[1])
     
     st.write(alignments[0]._get_row(0))
