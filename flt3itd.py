@@ -23,8 +23,7 @@ if submit_button:
     right_flank = requests.get("https://api.genome.ucsc.edu/getData/sequence?genome=hg38;chrom="+chrom+";start="+end+";end="+str(right_flank_end)).json()['dna']
     seq_ref=left_flank+itd+right_flank
     st.write('sequence retrieved')
-    st.write(seq_ref)
-    st.write(seq_var)
+
     # Finding similarities
     aligner = Align.PairwiseAligner()
     aligner.open_gap_score = -2
@@ -35,8 +34,7 @@ if submit_button:
     #seqshow2= [a for a in str(alignments[0].sequences[1])]
     ref_a=re.search('-',alignments[0]._get_row(0))
     var_a=re.search('-',alignments[0]._get_row(1))
-    st.write(alignments[0]._get_row(0))
-    st.write(alignments[0]._get_row(1))
+
     if ref_a != None and var_a != None:
         rr=ref_a.span()+var_a.span()
         min_val, max_val = np.min(rr), np.max(rr)
@@ -65,7 +63,8 @@ if submit_button:
     towrite1=pd.concat((pd.DataFrame(array1).T,pd.DataFrame(array2).T))
 
     st.write(towrite1)
-    chart_data1 = towrite1.apply(lambda x: x.iloc[0]==x.iloc[1])
+    chart_data1 = towrite1.apply(lambda x: sum(x.iloc[0]==x.iloc[1]))
     st.bar_chart(chart_data1.T,width=towrite1.shape[1])
     
- 
+    st.write(alignments[0]._get_row(0))
+    st.write(alignments[0]._get_row(1))
