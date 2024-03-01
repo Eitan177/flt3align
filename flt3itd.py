@@ -24,11 +24,13 @@ if submit_button:
     seq_ref=left_flank+itd+right_flank
     st.write('sequence retrieved')
     st.write(seq_ref)
+    st.write(seq_var)
     # Finding similarities
     aligner = Align.PairwiseAligner()
     aligner.open_gap_score = -2
     alignments = aligner.align(seq_ref, seq_var)
     st.write('pairwise alignment finished')
+    st.write(alignments)
     #seqshow1= [a for a in str(alignments[0].sequences[0])] 
     #seqshow2= [a for a in str(alignments[0].sequences[1])]
     ref_a=re.search('-',alignments[0]._get_row(0))
