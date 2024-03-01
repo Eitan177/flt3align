@@ -50,53 +50,22 @@ if submit_button:
         min_val, max_val = np.min(rr), np.max(rr)
         max_val=max_val+len(re.findall('-',alignments[0]._get_row(1))) 
     array1=[]
-    rc_array1=[]
-    c_array1=[]
-    r_array1=[]
     array2=[]
-    rc_array2=[]
-    c_array2=[]
-    r_array2=[]    
-    
+
     def rev(it):
         "Reverses an interable and returns it as a string"
         return ''.join(reversed(it))
     
-    for ch2 in alignments[0]._get_row(1)[min_val-sequence_to_see_flank:max_val+sequence_to_see_flank]:
+    for ch2 in alignments[0]._get_row(1):
         array2.append(ch2)
-    for ch1 in alignments[0]._get_row(0)[min_val-sequence_to_see_flank:max_val+sequence_to_see_flank]:
+    for ch1 in alignments[0]._get_row(0):
         array1.append(ch1)    
-    for rc_ch2 in str(Seq(alignments[0]._get_row(1)[min_val-sequence_to_see_flank:max_val+sequence_to_see_flank]).reverse_complement()):
-        rc_array2.append(rc_ch2)
-    for rc_ch1 in str(Seq(alignments[0]._get_row(0)[min_val-sequence_to_see_flank:max_val+sequence_to_see_flank]).reverse_complement()):
-        rc_array1.append(rc_ch1)
-    for c_ch2 in str(Seq(alignments[0]._get_row(1)[min_val-sequence_to_see_flank:max_val+sequence_to_see_flank]).complement()):
-        c_array2.append(c_ch2)
-    for c_ch1 in str(Seq(alignments[0]._get_row(0)[min_val-sequence_to_see_flank:max_val+sequence_to_see_flank]).complement()):
-        c_array1.append(c_ch1)
-    for r_ch2 in rev(str(Seq(alignments[0]._get_row(1)[min_val-sequence_to_see_flank:max_val+sequence_to_see_flank]))):
-        r_array2.append(r_ch2)
-    for r_ch1 in rev(str(Seq(alignments[0]._get_row(0)[min_val-sequence_to_see_flank:max_val+sequence_to_see_flank]))):
-        r_array1.append(r_ch1)
+
 
     towrite1=pd.concat((pd.DataFrame(array1).T,pd.DataFrame(array2).T))
-    towrite2=pd.concat((pd.DataFrame(rc_array1).T,pd.DataFrame(rc_array2).T))
-    towrite3=pd.concat((pd.DataFrame(c_array1).T,pd.DataFrame(c_array2).T))
+
     st.write(towrite1)
     chart_data1 = towrite1.apply(lambda x: x.iloc[0]==x.iloc[1])
     st.bar_chart(chart_data1.T,width=towrite1.shape[1])
     
-    st.write('reverse complement')
-    st.write(towrite2)
-    chart_data2 = towrite2.apply(lambda x: x.iloc[0]==x.iloc[1])
-    st.bar_chart(chart_data2.T,width=towrite2.shape[1])
-    st.write('complement')
-    st.write(towrite3)
-    chart_data3 = towrite3.apply(lambda x: x.iloc[0]==x.iloc[1])
-    st.bar_chart(chart_data3.T,width=towrite3.shape[1])
-
-    st.write('reverse')
-    towrite4=pd.concat((pd.DataFrame(r_array1).T,pd.DataFrame(r_array2).T))
-    st.write(towrite4)
-    chart_data4 = towrite4.apply(lambda x: x.iloc[0]==x.iloc[1])
-    st.bar_chart(chart_data4.T,width=towrite4.shape[1])
+ 
