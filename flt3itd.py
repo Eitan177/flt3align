@@ -72,7 +72,7 @@ if submit_button:
 
     aligner.open_gap_score = -2
     aligner.extend_gap_score = -1
-    aligner.match_score = 10
+    aligner.match_score = 4
     itdseqalignments = aligner.align(seq_ref, itdseq)
     do_analysis(itdseqalignments)
     st.write(itdseq)
