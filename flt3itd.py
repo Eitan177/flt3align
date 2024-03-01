@@ -70,7 +70,7 @@ if submit_button:
     st.write(chart_data1)
     itdlen=np.max(np.where(chart_data1['match'])) -np.min(np.where(chart_data1['match']))  - len(ucsc_variant_seq) 
     st.write(itdlen)
-    st.bar_chart(chart_data1,y='ref',color='var',width=towrite1.shape[1])
+    st.bar_chart(chart_data1,y='ref',color='match',width=towrite1.shape[1])
     
     st.write(alignments[0]._get_row(0))
     st.write(alignments[0]._get_row(1))
