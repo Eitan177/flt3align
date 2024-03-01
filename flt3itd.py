@@ -44,6 +44,7 @@ with st.form(key='parameters'):
     reference=st.text_input('coordinates of breakpoint breakpoints of ITD', 'chr13:28034050-28034134',help='Example: chr13:28034050-28034134')
     seq_var=st.text_input('sequence of read to align','ATTTGGCACATTCCATTCTTACCAAACTCTAAATTTTCTCTTGGAAACTCCCATTTGAGATCATATTCATATTCTTGGCCGTGGTGCAGAAACATTTGGCACATTCCATTCTTACCAAACTCTAAATTTTCTCTTGGAAACTCCCATTTG')
     sequence_to_see_flank =st.number_input('flanking sequence to display in alignments', min_value=5, max_value=500, value=200, step=1)
+    reconstructed=st.checkbox('include alignment of the reconstructed ITD')
     submit_button = st.form_submit_button(label='Submit')
 if submit_button:
     chrom=reference.split(':')[0]
@@ -68,7 +69,8 @@ if submit_button:
     itdseq=ucsc_variant_seq+''.join(chart_data1['varseq'][chart_data1['insert']])
 
     itdseqalignments = aligner.align(seq_ref, itdseq)
-    do_analysis(itdseqalignments,'query with ITD')
+    if reconstructed:
+        do_analysis(itdseqalignments,'query with ITD')
     st.write('ITD')
     st.write(itdseq)
     st.write('ITD Length')
