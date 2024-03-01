@@ -8,7 +8,7 @@ import streamlit as st
 # Creating sample sequences
 with st.form(key='parameters'):
     reference=st.text_input('coordinates of breakpoint breakpoints of ITD', 'chr13:28034050-28034134',help='Example: chr13:28034050-28034134')
-    seq_var=st.text_input('sequence of read to align')
+    seq_var=st.text_input('sequence of read to align','ATTTGGCACATTCCATTCTTACCAAACTCTAAATTTTCTCTTGGAAACTCCCATTTGAGATCATATTCATATTCTTGGCCGTGGTGCAGAAACATTTGGCACATTCCATTCTTACCAAACTCTAAATTTTCTCTTGGAAACTCCCATTTG')
     sequence_to_see_flank =st.number_input('flanking sequence to display in alignments', min_value=5, max_value=500, value=200, step=1)
     submit_button = st.form_submit_button(label='Submit')
 if submit_button:
@@ -23,7 +23,7 @@ if submit_button:
     right_flank = requests.get("https://api.genome.ucsc.edu/getData/sequence?genome=hg38;chrom="+chrom+";start="+end+";end="+str(right_flank_end)).json()['dna']
     seq_ref=left_flank+itd+right_flank
     st.write('sequence retrieved')
-  
+    st.write(seq_ref)
     # Finding similarities
     aligner = Align.PairwiseAligner()
     aligner.open_gap_score = -2
