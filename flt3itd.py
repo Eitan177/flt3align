@@ -28,6 +28,7 @@ if submit_button:
     aligner = Align.PairwiseAligner()
     aligner.open_gap_score = -2
     alignments = aligner.align(seq_ref, seq_var)
+    
     st.write('pairwise alignment finished')
     
     #seqshow1= [a for a in str(alignments[0].sequences[0])] 
@@ -71,13 +72,14 @@ if submit_button:
     chart_data1['minmatch'][np.min(np.where(chart_data1['match'])[0]):]=1
     chart_data1['maxmatch']=0
     chart_data1['maxmatch'][np.max(np.where(chart_data1['match'])[0]):]=1
+    chart_data1['insert']=chart_data1.apply(lambda  x: x[2]== 1 and x[3]==0 and x[1]==0,axis=1)
+    chart_data1['refseq']=towrite.apply(lambda x:x[0])
+    chart_data1['varseq']=towrite.apply(lambda x:x[1])
     st.write(chart_data1)
-    st.write(np.sum(chart_data1.apply(lambda  x: x[2]== 1 and x[3]==0 and x[1]==0,axis=1)))
-    st.write(chart_data1)
-    itdlen=np.max(np.where(chart_data1['match'])) -np.min(np.where(chart_data1['match']))  - len(ucsc_variant_seq) 
-    st.write(itdlen)
     st.write(len(ucsc_variant_seq))
+    st.write('Alignment')
     st.bar_chart(chart_data1,y='ref',color='match',width=towrite1.shape[1])
-    
+    st.write('ITD Length')
+    st.write(itdlen+np.sum(chart_data1['insert'])
     st.write(alignments[0]._get_row(0))
     st.write(alignments[0]._get_row(1))
