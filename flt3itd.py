@@ -64,14 +64,15 @@ if submit_button:
     
     chart_data1=do_analysis(alignments,'query with input sequence' )
     itdbase=len(ucsc_variant_seq)
-    st.write('ITD Length')
-    st.write(itdbase+np.sum(chart_data1['insert']))
+
     itdseq=ucsc_variant_seq+''.join(chart_data1['varseq'][chart_data1['insert']])
 
     itdseqalignments = aligner.align(seq_ref, itdseq)
     do_analysis(itdseqalignments,'query with ITD')
     st.write('ITD')
     st.write(itdseq)
+    st.write('ITD Length')
+    st.write(itdbase+np.sum(chart_data1['insert']))    
     #seqshow1= [a for a in str(alignments[0].sequences[0])] 
     #seqshow2= [a for a in str(alignments[0].sequences[1])]
 
