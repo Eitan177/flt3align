@@ -63,12 +63,12 @@ if submit_button:
     towrite1=pd.concat((pd.DataFrame(array1).T,pd.DataFrame(array2).T))
 
     st.write(towrite1)
-    chart_data1 = towrite1.apply(lambda x: ('M', int(x.iloc[0]==x.iloc[1])))
+    chart_data1 = towrite1.apply(lambda x: (True,x.iloc[0]==x.iloc[1]))
     st.write(chart_data1,width=towrite1.shape[1])
     chart_data1=chart_data1.T
     chart_data1.columns=['ref','var']
     st.write(chart_data1)
-    st.bar_chart(chart_data1,width=towrite1.shape[1])
+    st.bar_chart(chart_data1,y='ref',color='var',width=towrite1.shape[1])
     
     st.write(alignments[0]._get_row(0))
     st.write(alignments[0]._get_row(1))
