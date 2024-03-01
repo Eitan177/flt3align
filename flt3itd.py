@@ -81,7 +81,7 @@ if submit_button:
     st.write(towrite1)
     chart_data1 = towrite1.apply(lambda x: x.iloc[0]==x.iloc[1])
     st.bar_chart(chart_data1.T,width=towrite1.shape[1])
-    breakpoint()
+    
     st.write('reverse complement')
     st.write(towrite2)
     chart_data2 = towrite2.apply(lambda x: x.iloc[0]==x.iloc[1])
