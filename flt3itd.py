@@ -35,8 +35,8 @@ if submit_button:
     #seqshow2= [a for a in str(alignments[0].sequences[1])]
     ref_a=re.search('-',alignments[0]._get_row(0))
     var_a=re.search('-',alignments[0]._get_row(1))
-    st.write(ref_a)
-    st.write(var_a)
+    st.write,alignments[0]._get_row(0))
+    st.write(alignments[0]._get_row(1))
     if ref_a != None and var_a != None:
         rr=ref_a.span()+var_a.span()
         min_val, max_val = np.min(rr), np.max(rr)
