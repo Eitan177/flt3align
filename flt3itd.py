@@ -70,8 +70,8 @@ if submit_button:
     st.write(itdbase+np.sum(chart_data1['insert']))
     itdseq=ucsc_variant_seq+''.join(chart_data1['varseq'][chart_data1['insert']])
     aligner.mode = 'global'
-    aligner.open_gap_score = 0
-    aligner.extend_gap_score = -2
+    aligner.open_gap_score = -2
+    aligner.extend_gap_score = 0
     aligner.match_score = 5
     itdseqalignments = aligner.align(seq_ref, itdseq)
     do_analysis(itdseqalignments)
