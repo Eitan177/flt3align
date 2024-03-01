@@ -5,6 +5,40 @@ import pandas as pd
 import numpy as np
 import re
 import streamlit as st 
+
+
+def do_analysis(alignments):
+    array1=[]
+    array2=[]    
+    for ch2 in alignments[0]._get_row(1):
+        array2.append(ch2)
+    for ch1 in alignments[0]._get_row(0):
+        array1.append(ch1)    
+
+
+    towrite1=pd.concat((pd.DataFrame(array1).T,pd.DataFrame(array2).T))
+
+    st.write(towrite1)
+    chart_data1 = towrite1.apply(lambda x: (True,x.iloc[0]==x.iloc[1]))
+    st.write(chart_data1,width=towrite1.shape[1])
+    chart_data1=chart_data1.T
+    chart_data1.columns=['ref','match']
+    chart_data1['minmatch']=0
+    chart_data1['minmatch'][np.min(np.where(chart_data1['match'])[0]):]=1
+    chart_data1['maxmatch']=0
+    chart_data1['maxmatch'][np.max(np.where(chart_data1['match'])[0]):]=1
+    chart_data1['insert']=chart_data1.apply(lambda  x: x[2]== 1 and x[3]==0 and x[1]==0,axis=1)
+    chart_data1['refseq']=towrite1.apply(lambda x:x.iloc[0])
+    chart_data1['varseq']=towrite1.apply(lambda x:x.iloc[1])
+    st.write(chart_data1)
+
+    
+    st.write('Alignment')
+    st.bar_chart(chart_data1,y='ref',color='match',width=towrite1.shape[1])
+    return chart_data1
+
+
+
 # Creating sample sequences
 with st.form(key='parameters'):
     reference=st.text_input('coordinates of breakpoint breakpoints of ITD', 'chr13:28034050-28034134',help='Example: chr13:28034050-28034134')
@@ -30,59 +64,15 @@ if submit_button:
     alignments = aligner.align(seq_ref, seq_var)
     
     st.write('pairwise alignment finished')
-    
-    #seqshow1= [a for a in str(alignments[0].sequences[0])] 
-    #seqshow2= [a for a in str(alignments[0].sequences[1])]
-    ref_a=re.search('-',alignments[0]._get_row(0))
-    var_a=re.search('-',alignments[0]._get_row(1))
-
-    if ref_a != None and var_a != None:
-        rr=ref_a.span()+var_a.span()
-        min_val, max_val = np.min(rr), np.max(rr)
-        max_val=max_val+np.max((len(re.findall('-',alignments[0]._get_row(0))),len(re.findall('-',alignments[0]._get_row(1)))))
-    elif ref_a != None:
-        rr=ref_a.span()
-        min_val, max_val = np.min(rr), np.max(rr)
-        max_val=max_val+len(re.findall('-',alignments[0]._get_row(0)))
-    else:
-        rr=var_a.span()   
-        min_val, max_val = np.min(rr), np.max(rr)
-        max_val=max_val+len(re.findall('-',alignments[0]._get_row(1))) 
-    array1=[]
-    array2=[]
-
-    def rev(it):
-        "Reverses an interable and returns it as a string"
-        return ''.join(reversed(it))
-    
-    for ch2 in alignments[0]._get_row(1):
-        array2.append(ch2)
-    for ch1 in alignments[0]._get_row(0):
-        array1.append(ch1)    
-
-
-    towrite1=pd.concat((pd.DataFrame(array1).T,pd.DataFrame(array2).T))
-
-    st.write(towrite1)
-    chart_data1 = towrite1.apply(lambda x: (True,x.iloc[0]==x.iloc[1]))
-    st.write(chart_data1,width=towrite1.shape[1])
-    chart_data1=chart_data1.T
-    chart_data1.columns=['ref','match']
-    chart_data1['minmatch']=0
-    chart_data1['minmatch'][np.min(np.where(chart_data1['match'])[0]):]=1
-    chart_data1['maxmatch']=0
-    chart_data1['maxmatch'][np.max(np.where(chart_data1['match'])[0]):]=1
-    chart_data1['insert']=chart_data1.apply(lambda  x: x[2]== 1 and x[3]==0 and x[1]==0,axis=1)
-    chart_data1['refseq']=towrite1.apply(lambda x:x.iloc[0])
-    chart_data1['varseq']=towrite1.apply(lambda x:x.iloc[1])
-    st.write(chart_data1)
+    chart_data1=do_analysis(alignments)
     itdbase=len(ucsc_variant_seq)
-    st.write('Alignment')
-    st.bar_chart(chart_data1,y='ref',color='match',width=towrite1.shape[1])
     st.write('ITD Length')
     st.write(itdbase+np.sum(chart_data1['insert']))
     itdseq=ucsc_variant_seq+''.join(chart_data1['varseq'][chart_data1['insert']])
+    itdseqalignments = aligner.align(seq_ref, itdseq)
+    do_analysis(itdseqalignments)
     st.write(itdseq)
-    
-    st.write(alignments[0]._get_row(0))
-    st.write(alignments[0]._get_row(1))
+    #seqshow1= [a for a in str(alignments[0].sequences[0])] 
+    #seqshow2= [a for a in str(alignments[0].sequences[1])]
+
+
