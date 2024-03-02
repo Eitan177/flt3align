@@ -58,8 +58,8 @@ if submit_button:
     right_flank_end=int(end)+sequence_to_see_flank
     ucsc_variant_seq=requests.get("https://api.genome.ucsc.edu/getData/sequence?genome=hg38;chrom="+chrom+";start="+start+";end="+end).json()['dna']
     itd=ucsc_variant_seq*2
-    left_flank = requests.get("https://api.genome.ucsc.edu/getData/sequence?genome=hg38;chrom="+chrom+";start="+str(left_flank_start)+";end="+start).json()['dna']
-    right_flank = requests.get("https://api.genome.ucsc.edu/getData/sequence?genome=hg38;chrom="+chrom+";start="+end+";end="+str(right_flank_end)).json()['dna']
+    left_flank = requests.get("https://api.genome.ucsc.edu/getData/sequence?genome=hg38;chrom="+chrom+";start="+str(left_flank_start)+";end="+str(int(start)-1)).json()['dna']
+    right_flank = requests.get("https://api.genome.ucsc.edu/getData/sequence?genome=hg38;chrom="+chrom+";start="+str(int(end)+1)+";end="+str(right_flank_end)).json()['dna']
     seq_ref=left_flank+itd+right_flank
 
     # Finding similarities
