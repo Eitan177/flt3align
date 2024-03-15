@@ -47,7 +47,7 @@ with st.form(key='parameters'):
     seq_var=st.text_input('sequence of read to align','ATTTGGCACATTCCATTCTTACCAAACTCTAAATTTTCTCTTGGAAACTCCCATTTGAGATCATATTCATATTCTTGGCCGTGGTGCAGAAACATTTGGCACATTCCATTCTTACCAAACTCTAAATTTTCTCTTGGAAACTCCCATTTG')
     sequence_to_see_flank =st.number_input('flanking sequence to display in alignments', min_value=2, max_value=500, value=200, step=1)
     revc=st.checkbox('reverse complement the hypothetical insert')
-    ality=alignmenttypec=st.radio('local','global')
+    ality=alignmenttypec=st.radio(['local','global'])
     reconstructed=st.checkbox('include alignment of the reconstructed ITD')
     submit_button = st.form_submit_button(label='Submit')
 if submit_button:
