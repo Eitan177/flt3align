@@ -85,9 +85,9 @@ if submit_button:
 
     itdseq=ucsc_variant_seq+''.join(chart_data1['varseq'][chart_data1['insert']])
 
-    itdseqalignments = aligner.align(seq_ref, itdseq, False)
+    itdseqalignments = aligner.align(seq_ref, itdseq)
     if reconstructed:
-        do_analysis(itdseqalignments,'query with ITD')
+        do_analysis(itdseqalignments,'query with ITD',False)
     st.write('ITD')
     st.write(itdseq)
     st.write('ITD Length')
