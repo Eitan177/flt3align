@@ -62,7 +62,7 @@ if submit_button:
         itd=ucsc_variant_seq+str(Seq(ucsc_variant_seq).reverse_complement())
     else:    
         itd=ucsc_variant_seq*2
-    normal=ucsc_variant
+    normal=ucsc_variant_seq
     left_flank = requests.get("https://api.genome.ucsc.edu/getData/sequence?genome=hg38;chrom="+chrom+";start="+str(left_flank_start)+";end="+str(int(start)-1)).json()['dna']
     right_flank = requests.get("https://api.genome.ucsc.edu/getData/sequence?genome=hg38;chrom="+chrom+";start="+str(int(end)+1)+";end="+str(right_flank_end)).json()['dna']
     seq_ref=left_flank+itd+right_flank
