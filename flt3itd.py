@@ -48,6 +48,7 @@ with st.form(key='parameters'):
     sequence_to_see_flank =st.number_input('flanking sequence to display in alignments', min_value=2, max_value=500, value=200, step=1)
     revc=st.radio('reverse and/or complement the hypothetical duplication',['no','reverse','complement','reversecomplement'])
     ality=alignmenttypec=st.radio('alignment strategy',['local','global'])
+    adddownstream=st.radio('add duplication downstream',[True,False])
     reconstructed=st.checkbox('include alignment of the reconstructed ITD')
     submit_button = st.form_submit_button(label='Submit')
 if submit_button:
@@ -58,11 +59,20 @@ if submit_button:
     right_flank_end=int(end)+sequence_to_see_flank
     ucsc_variant_seq=requests.get("https://api.genome.ucsc.edu/getData/sequence?genome=hg38;chrom="+chrom+";start="+start+";end="+end).json()['dna']
     if revc=='reversecomplement':
-        itd=ucsc_variant_seq+str(Seq(ucsc_variant_seq).reverse_complement())
+        if adddownstream:
+            itd=ucsc_variant_seq+str(Seq(ucsc_variant_seq).reverse_complement())
+        else:
+            itd=str(Seq(ucsc_variant_seq).reverse_complement())+ucsc_variant_seq
     elif revc=='reverse':
-        itd=ucsc_variant_seq+str(Seq(ucsc_variant_seq).reverse())
+        if adddownstream:
+            itd=ucsc_variant_seq+ucsc_variant_seq[::-1] 
+        else:
+            itd=ucsc_variant_seq[::-1]+ucsc_variant_seq
     elif revc=='complement':
-        itd=ucsc_variant_seq+str(Seq(ucsc_variant_seq).complement())
+        if adddownstream:
+            itd=ucsc_variant_seq+str(Seq(ucsc_variant_seq).complement())
+        else:
+            itd=str(Seq(ucsc_variant_seq).complement())+ucsc_variant_seq
     else:    
         itd=ucsc_variant_seq*2
     normal=ucsc_variant_seq
