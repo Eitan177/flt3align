@@ -47,7 +47,8 @@ def do_analysis(alignments, titlewords):
 with st.form(key='parameters'):
     reference=st.text_input('coordinates of breakpoint breakpoints of ITD', 'chr13:28034050-28034134',help='Example: chr13:28034050-28034134')
     seq_var=st.text_input('sequence of read to align','ATTTGGCACATTCCATTCTTACCAAACTCTAAATTTTCTCTTGGAAACTCCCATTTGAGATCATATTCATATTCTTGGCCGTGGTGCAGAAACATTTGGCACATTCCATTCTTACCAAACTCTAAATTTTCTCTTGGAAACTCCCATTTG')
-    sequence_to_see_flank =st.number_input('flanking sequence to display in alignments', min_value=5, max_value=500, value=200, step=1)
+    sequence_to_see_flank =st.number_input('flanking sequence to display in alignments', min_value=2, max_value=500, value=200, step=1)
+    revc=st.checkbox('reverse complement the hypothetical insert')
     reconstructed=st.checkbox('include alignment of the reconstructed ITD')
     submit_button = st.form_submit_button(label='Submit')
 if submit_button:
@@ -57,10 +58,15 @@ if submit_button:
     left_flank_start=int(start)-sequence_to_see_flank
     right_flank_end=int(end)+sequence_to_see_flank
     ucsc_variant_seq=requests.get("https://api.genome.ucsc.edu/getData/sequence?genome=hg38;chrom="+chrom+";start="+start+";end="+end).json()['dna']
-    itd=ucsc_variant_seq*2
+    if revc:
+        itd=ucsc_variant_seq+str(Seq(ucsc_variant_seq).reverse_complement())
+    else:    
+        itd=ucsc_variant_seq*2
+    normal=ucsc_variant
     left_flank = requests.get("https://api.genome.ucsc.edu/getData/sequence?genome=hg38;chrom="+chrom+";start="+str(left_flank_start)+";end="+str(int(start)-1)).json()['dna']
     right_flank = requests.get("https://api.genome.ucsc.edu/getData/sequence?genome=hg38;chrom="+chrom+";start="+str(int(end)+1)+";end="+str(right_flank_end)).json()['dna']
     seq_ref=left_flank+itd+right_flank
+    seq_normal=left_flank+normal+right_flank
 
     # Finding similarities
     aligner = Align.PairwiseAligner()
@@ -68,6 +74,10 @@ if submit_button:
     alignments = aligner.align(seq_ref, seq_var)
     
     chart_data1=do_analysis(alignments,'query with input sequence' )
+
+    alignments2=aligner.align(seq_normal, seq_var)
+    chart_data2=do_analysis(alignments2,'query without insert')
+    
     itdbase=len(ucsc_variant_seq)
 
     itdseq=ucsc_variant_seq+''.join(chart_data1['varseq'][chart_data1['insert']])
