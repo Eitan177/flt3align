@@ -71,6 +71,7 @@ if submit_button:
     # Finding similarities
     aligner = Align.PairwiseAligner()
     aligner.open_gap_score = -2
+    aligner.extend_gap_score = -0.01
     alignments = aligner.align(seq_ref, seq_var)
     
     chart_data1=do_analysis(alignments,'query with input sequence' )
