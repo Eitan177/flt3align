@@ -7,7 +7,7 @@ import re
 import streamlit as st 
 
 
-def do_analysis(alignments, titlewords):
+def do_analysis(alignments, titlewords,withitd):
     array1=[]
     array2=[]    
     for ch2 in alignments[0]._get_row(1):
@@ -29,16 +29,14 @@ def do_analysis(alignments, titlewords):
     chart_data1['maxmatch'][np.max(np.where(chart_data1['match'])[0]):]=1
     chart_data1['insert']=chart_data1.apply(lambda  x: x[2]== 1 and x[3]==0 and x[1]==0,axis=1)
     chart_data1['refseq']=towrite1.apply(lambda x:x.iloc[0])
-    chart_data1['varseq']=towrite1.apply(lambda x:x.iloc[1])
-   
-
-    
+    chart_data1['varseq']=towrite1.apply(lambda x:x.iloc[1])  
 
     st.bar_chart(chart_data1,y='ref',color='match',width=towrite1.shape[1])
     st.write('Matching bases between sequence and reference')
     st.write(np.sum(chart_data1['match']))
-    st.write('inserted base number')
-    st.write(np.sum(chart_data1['insert']))    
+    if withitd:
+        st.write('inserted base number')
+        st.write(np.sum(chart_data1['insert']))    
     return chart_data1
 
 
@@ -49,6 +47,7 @@ with st.form(key='parameters'):
     seq_var=st.text_input('sequence of read to align','ATTTGGCACATTCCATTCTTACCAAACTCTAAATTTTCTCTTGGAAACTCCCATTTGAGATCATATTCATATTCTTGGCCGTGGTGCAGAAACATTTGGCACATTCCATTCTTACCAAACTCTAAATTTTCTCTTGGAAACTCCCATTTG')
     sequence_to_see_flank =st.number_input('flanking sequence to display in alignments', min_value=2, max_value=500, value=200, step=1)
     revc=st.checkbox('reverse complement the hypothetical insert')
+    ality=alignmenttypec=st.radio('local','global')
     reconstructed=st.checkbox('include alignment of the reconstructed ITD')
     submit_button = st.form_submit_button(label='Submit')
 if submit_button:
@@ -70,17 +69,17 @@ if submit_button:
 
     # Finding similarities
     aligner = Align.PairwiseAligner()
-    aligner.mode = 'local'
+    aligner.mode = ality
     aligner.open_gap_score = -2
     #aligner.extend_gap_score = -0.1
     #aligner.target_end_gap_score = 1.0
     #aligner.query_end_gap_score = -1.0
     alignments = aligner.align(seq_ref, seq_var)
     
-    chart_data1=do_analysis(alignments,'query with input sequence' )
+    chart_data1=do_analysis(alignments,'query with input sequence',True)
 
     alignments2=aligner.align(seq_normal, seq_var)
-    chart_data2=do_analysis(alignments2,'query without insert')
+    chart_data2=do_analysis(alignments2,'query without insert',False)
     
     itdbase=len(ucsc_variant_seq)
 
