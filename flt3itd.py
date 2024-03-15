@@ -72,8 +72,8 @@ if submit_button:
     aligner = Align.PairwiseAligner()
     aligner.open_gap_score = -2
     #aligner.extend_gap_score = -0.01
-    aligner.target_end_gap_score = 1.0
-    aligner.query_end_gap_score = 0.0
+    #aligner.target_end_gap_score = 1.0
+    aligner.query_end_gap_score = 1.0
     alignments = aligner.align(seq_ref, seq_var)
     
     chart_data1=do_analysis(alignments,'query with input sequence' )
