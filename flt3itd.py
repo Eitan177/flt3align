@@ -57,7 +57,7 @@ if submit_button:
     left_flank_start=int(start)-sequence_to_see_flank
     right_flank_end=int(end)+sequence_to_see_flank
     ucsc_variant_seq=requests.get("https://api.genome.ucsc.edu/getData/sequence?genome=hg38;chrom="+chrom+";start="+start+";end="+end).json()['dna']
-    if revc=='reversecomplement:
+    if revc=='reversecomplement':
         itd=ucsc_variant_seq+str(Seq(ucsc_variant_seq).reverse_complement())
     elif revc=='reverse':
         itd=ucsc_variant_seq+str(Seq(ucsc_variant_seq).reverse())
