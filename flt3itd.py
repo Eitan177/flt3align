@@ -69,7 +69,8 @@ if submit_button:
     seq_normal=left_flank+normal+right_flank
 
     # Finding similarities
-    aligner = Align.PairwiseAligner('local')
+    aligner = Align.PairwiseAligner()
+    aligner.mode = 'local'
     aligner.open_gap_score = -2
     #aligner.extend_gap_score = -0.1
     #aligner.target_end_gap_score = 1.0
