@@ -45,7 +45,8 @@ def do_analysis(alignments, titlewords,withitd):
 with st.form(key='parameters'):
     reference=st.text_input('coordinates of breakpoint breakpoints of ITD', 'chr13:28034050-28034134',help='Example: chr13:28034050-28034134')
     seq_var=st.text_input('sequence of read to align','ATTTGGCACATTCCATTCTTACCAAACTCTAAATTTTCTCTTGGAAACTCCCATTTGAGATCATATTCATATTCTTGGCCGTGGTGCAGAAACATTTGGCACATTCCATTCTTACCAAACTCTAAATTTTCTCTTGGAAACTCCCATTTG')
-    sequence_to_see_flank =st.number_input('flanking sequence to display in alignments', min_value=2, max_value=500, value=200, step=1)
+    sequence_to_see_flank =st.number_input('flanking sequence to display in alignments', min_value=0, max_value=500, value=200, step=1)
+    mm=st.number_input('mismatch score',min_value=-200,max_value=0,value=-2,step=1)
     revc=st.radio('reverse and/or complement the hypothetical duplication',['no','reverse','complement','reversecomplement'])
     ality=alignmenttypec=st.radio('alignment strategy',['local','global'])
     adddownstream=st.radio('add duplication downstream',[True,False])
@@ -87,6 +88,7 @@ if submit_button:
     aligner.open_gap_score = -2
     #aligner.extend_gap_score = -0.1
     #aligner.target_end_gap_score = 1.0
+    aligner.mismatch_score=mm
     aligner.query_open_gap_score = -4.0
     alignments = aligner.align(seq_ref, seq_var)
     
